@@ -1,16 +1,19 @@
 import com.pff.*;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by R00715649 on 30-Oct-16.
  */
 public class PSTParser {
 
-    private String saveFolder = "D:/importDocs/";
+    static String saveFolder = "D:/importDocs/";
     static int fileCount =0;
 
     //open the pst file
@@ -36,15 +39,20 @@ public class PSTParser {
             while (message != null){
                 fileCount++;
                 System.out.println(message.getSubject());
-                message = (PSTMessage) folder.getNextChild();
 
                 //check if there is a pl number in the subject
                 String subject = message.getSubject();
                 String plNumber = extractPL(subject);
 
                 if (plNumber != null){
-                    saveAttachments(message);
+                    File plFolder = new File(saveFolder + plNumber + "/");
+                    if (!plFolder.exists()){
+                        plFolder.mkdirs();
+                    }
+                    saveAttachments(message, plFolder.getPath());
+                    System.out.println(plNumber);
                 }
+                message = (PSTMessage) folder.getNextChild();
             }
         }
 
@@ -55,15 +63,52 @@ public class PSTParser {
 
 
     static String extractPL(String text){
-        //#######################
+
+        Pattern pattern1 = Pattern.compile("0[\\d\\w][\\d\\w]\\d{9}[\\d\\w]\\w{4}\\d[\\d\\w]\\w[\\w\\d]?[\\w\\d]?[\\w\\d]?", Pattern.CASE_INSENSITIVE);
+        Pattern pattern2 = Pattern.compile("00P\\d{10}\\w\\d?", Pattern.CASE_INSENSITIVE);
+        Pattern pattern3 = Pattern.compile("WT\\d{9}\\w", Pattern.CASE_INSENSITIVE);
+        Pattern pattern4 = Pattern.compile("\\d{12}\\w{2}\\d\\d\\w\\d\\d", Pattern.CASE_INSENSITIVE);
+        List<Pattern>patterns = Arrays.asList(pattern1, pattern2, pattern3, pattern4);
+
+        for (Pattern p:patterns){
+            Matcher matcher = p.matcher(text);
+            if (matcher.find()){
+                return matcher.group();
+            }
+        }
+        return null;
     }
 
-    static void saveAttachments(PSTMessage message) throws PSTException, IOException{
+    static void saveAttachments(PSTMessage message, String saveFolder) throws PSTException, IOException{
         if (message.hasAttachments()){
             int attachmentCount = message.getNumberOfAttachments();
             for (int i = 0; i < attachmentCount; i++){
                 PSTAttachment attachment = message.getAttachment(i);
-                System.out.println(attachment.getDisplayName());
+                InputStream fileInputStream = attachment.getFileInputStream();
+                File outputFile = new File(saveFolder + "/" + attachment.getFilename());
+                System.out.println(outputFile.getAbsolutePath());
+
+                try {
+                    outputFile.createNewFile();
+                }catch (IOException error){
+                    System.out.println(error.getMessage());
+                    continue;
+                }
+
+                System.out.println("HEEEEEEEERE!!!");
+                try{
+                    FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
+                    int fileDataByte = fileInputStream.read();
+                    while (fileDataByte != -1){
+                        fileOutputStream.write(fileDataByte);
+                        fileDataByte = fileInputStream.read();
+                    }
+                    fileOutputStream.close();
+                    System.out.println(attachment.getDisplayName());
+                }catch (FileNotFoundException err){
+                    continue;
+                }
+
             }
         }
     }
@@ -76,7 +121,7 @@ public class PSTParser {
 
 
     public static void main(String[] args) throws Exception{
-        parse("D://Email//archive 2009 ruben.pst");
+        parse("D://Email//Archive.pst");
         System.out.println(fileCount);
     }
 }
