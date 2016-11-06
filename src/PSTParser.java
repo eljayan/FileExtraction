@@ -86,7 +86,8 @@ public class PSTParser {
                 PSTAttachment attachment = message.getAttachment(i);
                 InputStream fileInputStream = attachment.getFileInputStream();
                 File outputFile = new File(saveFolder + "/" + attachment.getFilename());
-                System.out.println(outputFile.getAbsolutePath());
+                //System.out.println(outputFile.getAbsolutePath());
+
 
                 try {
                     outputFile.createNewFile();
@@ -95,7 +96,6 @@ public class PSTParser {
                     continue;
                 }
 
-                System.out.println("HEEEEEEEERE!!!");
                 try{
                     FileOutputStream fileOutputStream = new FileOutputStream(outputFile);
                     int fileDataByte = fileInputStream.read();
@@ -105,6 +105,7 @@ public class PSTParser {
                     }
                     fileOutputStream.close();
                     System.out.println(attachment.getDisplayName());
+
                 }catch (FileNotFoundException err){
                     continue;
                 }
@@ -113,15 +114,10 @@ public class PSTParser {
         }
     }
 
-    //check if save folder contains folder with pl name
 
 
-
-    //save to the save folder.
-
-
-    public static void main(String[] args) throws Exception{
-        parse("D://Email//Archive.pst");
-        System.out.println(fileCount);
-    }
+//    public static void main(String[] args) throws Exception{
+//        parse("D://Email//Archive.pst");
+//        System.out.println(fileCount);
+//    }
 }

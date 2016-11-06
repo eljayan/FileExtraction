@@ -1,18 +1,18 @@
 import java.io.File;
-import java.io.FileFilter;
-import java.nio.file.FileSystem;
-import java.nio.file.FileVisitor;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.lang.Thread.yield;
 
 /**
  * Created by R00715649 on 30-Oct-16.
  */
-public class FileExtraction {
-    public static void main(String[] args) {
+public class FileParser {
 
-        //select the pst file folder
-        String folder = "D:/Email/";
+    //The method yields a string path each time
+    public static List<String> parser(String folder) {
+
+        List<String> pstFileNames = new ArrayList<String>();
 
         //loop pst files in folder
         File fileDirectory = new File(folder);
@@ -22,14 +22,10 @@ public class FileExtraction {
         for (File file:fileList){
             String fileName = file.getName();
             if (fileName.endsWith(".pst")){
-                System.out.println(fileName);
+                pstFileNames.add(file.getAbsolutePath());
             }
         }
-
-        //parse the pst file
-
-        //save the file to a folder
-
+        return pstFileNames;
     }
 
 }
