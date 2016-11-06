@@ -20,9 +20,13 @@ public class FileParser {
 
         //validate if it is a pst file
         for (File file:fileList){
-            String fileName = file.getName();
-            if (fileName.endsWith(".pst")){
-                pstFileNames.add(file.getAbsolutePath());
+            if (file.isDirectory()){
+                parser(file.getAbsolutePath());
+            }else {
+                String fileName = file.getName();
+                if (fileName.endsWith(".pst")) {
+                    pstFileNames.add(file.getAbsolutePath());
+                }
             }
         }
         return pstFileNames;
