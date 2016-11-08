@@ -29,12 +29,17 @@ public class Controller {
 
     @FXML
     void fileExtraction(ActionEvent event)throws Exception{
-        List<String>fileNames = FileParser.parser(folderName.getText());
-        for (String f:fileNames){
-            System.out.println(f);
-            PSTParser.parse(f);
+        int scannedFiles = 1;
+        int totalFiles;
 
+        List<String>fileNames = FileParser.parser(folderName.getText());
+        totalFiles = fileNames.size();
+
+        for (String f:fileNames){
+            processStatus.setText("Scanning file "+ f + " " + scannedFiles + " of " + totalFiles);
+            //PSTParser.parse(f);
         }
+        processStatus.setText("Scanning finished.");
     }
 
 }
