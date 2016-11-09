@@ -37,7 +37,10 @@ public class Controller {
 
         for (String f:fileNames){
             processStatus.setText("Scanning file "+ f + " " + scannedFiles + " of " + totalFiles);
-            //PSTParser.parse(f);
+            PSTParser pstParser = new PSTParser(f);
+            Thread pstParserThread = new Thread(pstParser);
+            pstParserThread.start();
+
         }
         processStatus.setText("Scanning finished.");
     }

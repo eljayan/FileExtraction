@@ -11,14 +11,31 @@ import java.util.regex.Pattern;
 /**
  * Created by R00715649 on 30-Oct-16.
  */
-public class PSTParser {
+public class PSTParser implements Runnable {
 
-    static String saveFolder = "D:/importDocs/";
-    static int fileCount =0;
+    public String saveFolder = "D:/importDocs/";
+    public int fileCount =0;
+    public String pstFileName;
+
+    //constructor
+    PSTParser(String pstFileName){
+        this.pstFileName = pstFileName;
+    }
+
+
+    @Override
+    public void run(){
+        try{
+            parse();
+        }catch (Exception e){
+
+        };
+    }
+
 
     //open the pst file
-    static void parse(String fileName)throws Exception{
-        PSTFile pstFile = new PSTFile(fileName);
+    public void parse()throws Exception{
+        PSTFile pstFile = new PSTFile(pstFileName);
 
         //scan all the folders
         PSTFolder rootFolder = pstFile.getRootFolder();
@@ -26,7 +43,7 @@ public class PSTParser {
 
     }
 
-    static void processFolder(PSTFolder folder) throws PSTException, IOException{
+    public void processFolder(PSTFolder folder) throws PSTException, IOException{
         if (folder.hasSubfolders()){
             Vector<PSTFolder>subFolders = folder.getSubFolders();
             Iterator<PSTFolder> folderIterator = subFolders.iterator();
@@ -62,7 +79,7 @@ public class PSTParser {
     //get the items
 
 
-    static String extractPL(String text){
+    public String extractPL(String text){
 
         Pattern pattern1 = Pattern.compile("0[\\d\\w][\\d\\w]\\d{9}[\\d\\w]\\w{4}\\d[\\d\\w]\\w[\\w\\d]?[\\w\\d]?[\\w\\d]?", Pattern.CASE_INSENSITIVE);
         Pattern pattern2 = Pattern.compile("00P\\d{10}\\w\\d?", Pattern.CASE_INSENSITIVE);
@@ -79,7 +96,7 @@ public class PSTParser {
         return null;
     }
 
-    static void saveAttachments(PSTMessage message, String saveFolder) throws PSTException, IOException{
+    public void saveAttachments(PSTMessage message, String saveFolder) throws PSTException, IOException{
         if (message.hasAttachments()){
             int attachmentCount = message.getNumberOfAttachments();
             for (int i = 0; i < attachmentCount; i++){
