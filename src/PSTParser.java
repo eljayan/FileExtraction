@@ -1,4 +1,10 @@
 import com.pff.*;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 import java.io.*;
 import java.util.Arrays;
@@ -16,12 +22,16 @@ public class PSTParser implements Runnable {
     public String saveFolder = "D:/importDocs/";
     public int fileCount =0;
     public String pstFileName;
+    public StringProperty status = new SimpleStringProperty("Scanning...");
+
 
     //constructor
     PSTParser(String pstFileName){
-        this.pstFileName = pstFileName;
-    }
 
+        this.pstFileName = pstFileName;
+
+
+    }
 
     @Override
     public void run(){
@@ -55,7 +65,9 @@ public class PSTParser implements Runnable {
             PSTMessage message = (PSTMessage) folder.getNextChild();
             while (message != null){
                 fileCount++;
-                System.out.println(message.getSubject());
+                String mess = message.getSubject();
+                System.out.println(mess);
+                Platform.runLater(()->status.setValue(mess));
 
                 //check if there is a pl number in the subject
                 String subject = message.getSubject();
@@ -67,7 +79,6 @@ public class PSTParser implements Runnable {
                         plFolder.mkdirs();
                     }
                     saveAttachments(message, plFolder.getPath());
-                    System.out.println(plNumber);
                 }
                 message = (PSTMessage) folder.getNextChild();
             }
@@ -102,7 +113,8 @@ public class PSTParser implements Runnable {
             for (int i = 0; i < attachmentCount; i++){
                 PSTAttachment attachment = message.getAttachment(i);
                 InputStream fileInputStream = attachment.getFileInputStream();
-                File outputFile = new File(saveFolder + "/" + attachment.getFilename());
+                //File outputFile = new File(saveFolder + "/" + attachment.getFilename());
+                File outputFile = new File(saveFolder + "/" + attachment.getDisplayName());
                 //System.out.println(outputFile.getAbsolutePath());
 
 
@@ -121,7 +133,6 @@ public class PSTParser implements Runnable {
                         fileDataByte = fileInputStream.read();
                     }
                     fileOutputStream.close();
-                    System.out.println(attachment.getDisplayName());
 
                 }catch (FileNotFoundException err){
                     continue;

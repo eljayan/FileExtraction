@@ -32,6 +32,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         Parent root = FXMLLoader.load((getClass().getResource("main.fxml")));
+
         Scene scene = new Scene(root);
 
         primaryStage.setTitle("PST File Extraction Utility");
@@ -39,6 +40,9 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.show();
 
+
     }
+
+
 
 }
