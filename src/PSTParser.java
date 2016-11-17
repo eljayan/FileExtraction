@@ -21,14 +21,14 @@ public class PSTParser implements Runnable {
 
     public String saveFolder = "D:/importDocs/";
     public int fileCount =0;
-    public String pstFileName;
-    public StringProperty status = new SimpleStringProperty("Scanning...");
+    public String rootFolder;
+    public StringProperty status = new SimpleStringProperty("Searching pst files...");
 
 
     //constructor
-    PSTParser(String pstFileName){
+    PSTParser(String rootFolder){
 
-        this.pstFileName = pstFileName;
+        this.rootFolder = rootFolder;
 
 
     }
@@ -46,7 +46,7 @@ public class PSTParser implements Runnable {
     //open the pst file
     public void parse()throws Exception{
 
-        List<String>fileNames = FileParser.parser(pstFileName);
+        List<String>fileNames = FileParser.parser(rootFolder);
 
         for (String f:fileNames){
             if (!f.endsWith(".pst")){

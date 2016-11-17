@@ -30,7 +30,6 @@ public class Controller {
     @FXML
     void fileExtraction(ActionEvent event)throws Exception{
 
-            //processStatus.setText("Scanning file "+ f + " " + scannedFiles + " of " + totalFiles);
             PSTParser pstParser = new PSTParser(folderName.getText());
 
             processStatus.textProperty().bind(pstParser.status);

@@ -9,16 +9,15 @@ import static java.lang.Thread.yield;
  */
 public class FileParser {
 
-    //The method yields a list of pst files string paths
-    public static List<String> parser(String folder) {
+    public static List<String> pstFileNames = new ArrayList<>();
 
-        List<String> pstFileNames = new ArrayList<String>();
+    //The method populates a list of pst files string paths
+    public static List<String> parser(String rootFolder) {
 
-        //loop pst files in folder
-        File fileDirectory = new File(folder);
+        //iterate all files in folder
+        File fileDirectory = new File(rootFolder);
         File[] fileList = fileDirectory.listFiles();
 
-        //validate if it is a pst file
         for (File file:fileList){
             if (file.isDirectory()){
                 parser(file.getAbsolutePath());
@@ -31,5 +30,6 @@ public class FileParser {
         }
         return pstFileNames;
     }
+
 
 }
