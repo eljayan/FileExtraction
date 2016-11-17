@@ -9,6 +9,6 @@
       <Button fx:id="selectFolder" layoutX="61.0" layoutY="38.0" mnemonicParsing="false" onAction="#loadFolder" prefHeight="31.0" prefWidth="114.0" text="Select Folder" />
       <Button fx:id="start" layoutX="61.0" layoutY="97.0" mnemonicParsing="false" onAction="#fileExtraction" prefHeight="31.0" prefWidth="114.0" text="Start" />
       <Label fx:id="folderName" layoutX="215.0" layoutY="43.0" prefHeight="21.0" prefWidth="282.0" text="The folder containing your pst files" />
-      <Label fx:id="processStatus" layoutX="215.0" layoutY="102.0" prefHeight="21.0" prefWidth="282.0" />
+      <Label fx:id="processStatus" layoutX="215.0" layoutY="72.0" prefHeight="84.0" prefWidth="282.0" wrapText="true" />
    </children>
 </AnchorPane>

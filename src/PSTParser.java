@@ -45,15 +45,26 @@ public class PSTParser implements Runnable {
 
     //open the pst file
     public void parse()throws Exception{
-        PSTFile pstFile = new PSTFile(pstFileName);
 
-        //scan all the folders
-        PSTFolder rootFolder = pstFile.getRootFolder();
-        processFolder(rootFolder);
+        List<String>fileNames = FileParser.parser(pstFileName);
+
+        for (String f:fileNames){
+            if (!f.endsWith(".pst")){
+                continue;
+            }
+            PSTFile pstFile = new PSTFile(f);
+
+            //scan all the folders
+            PSTFolder rootFolder = pstFile.getRootFolder();
+            processFolder(rootFolder);
+        }
+
+
 
     }
 
     public void processFolder(PSTFolder folder) throws PSTException, IOException{
+        System.out.println(folder.getDisplayName());
         if (folder.hasSubfolders()){
             Vector<PSTFolder>subFolders = folder.getSubFolders();
             Iterator<PSTFolder> folderIterator = subFolders.iterator();
@@ -67,7 +78,7 @@ public class PSTParser implements Runnable {
                 fileCount++;
                 String mess = message.getSubject();
                 System.out.println(mess);
-                Platform.runLater(()->status.setValue(mess));
+                Platform.runLater(()->status.set(mess));
 
                 //check if there is a pl number in the subject
                 String subject = message.getSubject();

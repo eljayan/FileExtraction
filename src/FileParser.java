@@ -9,7 +9,7 @@ import static java.lang.Thread.yield;
  */
 public class FileParser {
 
-    //The method yields a string path each time
+    //The method yields a list of pst files string paths
     public static List<String> parser(String folder) {
 
         List<String> pstFileNames = new ArrayList<String>();
